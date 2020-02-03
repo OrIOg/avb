@@ -13,8 +13,12 @@
 </head>
 
 <body>
-	<div></div>
+	<div>
+		<div id='map' style='width: 400px; height: 300px;'></div>
+		<ul id="events">
 
+		</ul>
+	</div>
 	<footer>
 		<div class="d-flex justify-content-around rounded rounded-top">
 			<div class="btn-bot border border-bottom-0 h-100 d-inline-block fas fa-glass-cheers"></div>
@@ -23,7 +27,8 @@
 			<div class="btn-bot border border-bottom-0 h-100 d-inline-block fas fa-bars"></div>
 		</div>
 	</footer>
-	<div id='map' style='width: 400px; height: 300px;'></div>
+
+	<script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
 	<script>
 		mapboxgl.accessToken = 'pk.eyJ1IjoiYXZiY29tcHRlIiwiYSI6ImNrNjZuY2Q3ZDFmOGkzb280ZXUzcXJtazMifQ.om3XMBAGEknpmEsBAXC08w';
 		let map = new mapboxgl.Map({
@@ -33,9 +38,73 @@
 			zoom: 12
 		});
 		map.addControl(new mapboxgl.NavigationControl());
+
+		var mapboxClient = mapboxSdk({
+			accessToken: mapboxgl.accessToken
+		});
+
+		function addPoint(val) {
+			mapboxClient.geocoding
+				.forwardGeocode({
+					query: val,
+					autocomplete: false,
+					limit: 1
+				})
+				.send()
+				.then(function (response) {
+					if (
+						response &&
+						response.body &&
+						response.body.features &&
+						response.body.features.length
+					) {
+						var feature = response.body.features[0];
+
+						new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+					}
+				});
+		}
+		addPoint('5 Rue Du Gaillon, 14000 Caen, France'); // Le Baroudeur
+		addPoint('rhumba caen');
+		addPoint('orient express caen');
+		addPoint('farniente caen');
+		addPoint('vertigo caen');
+
+		function intersectRect(r1, r2) {
+			return !(r2.left > r1.right ||
+				r2.right < r1.left ||
+				r2.top > r1.bottom ||
+				r2.bottom < r1.top);
+		}
+
+		function getVisibleMarkers() {
+			var cc = map.getContainer();
+			var els = cc.getElementsByClassName('mapboxgl-marker');
+			var ccRect = cc.getBoundingClientRect();
+			var visibles = [];
+			for (var i = 0; i < els.length; i++) {
+				var el = els.item(i);
+				var elRect = el.getBoundingClientRect();
+				intersectRect(ccRect, elRect) && visibles.push(el);
+			}
+			return visibles;
+		}
+
+		function updateEventList(markers) {
+			let ul = document.querySelector("")
+		}
+
+		map.on('zoom', function () {
+			updateEventList(getVisibleMarkers())
+		});
+		map.on('move', function () {
+			updateEventList(getVisibleMarkers())
+		});
+		``
+		`
 		map.on('load', function () {
 			map.loadImage(
-				'https://icons.iconarchive.com/icons/flat-icons.com/flat/64/Beer-icon.png',
+				'https://i.imgur.com/WgWXj11.png',
 				function (error, image) {
 					if (error) throw error;
 					map.addImage('bar', image);
@@ -64,6 +133,8 @@
 				}
 			);
 		});
+		`
+		``
 	</script>
 </body>
 
