@@ -15,7 +15,7 @@
 <body>
 	<div>
 		<div id='map' style='width: 400px; height: 300px;'></div>
-		<ul id="events">
+		<ul id="avbEvents">
 
 		</ul>
 	</div>
@@ -27,6 +27,7 @@
 			<div class="btn-bot border border-bottom-0 h-100 d-inline-block fas fa-bars"></div>
 		</div>
 	</footer>
+	<div id="spacer"></div>
 
 	<script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
 	<script>
@@ -43,7 +44,9 @@
 			accessToken: mapboxgl.accessToken
 		});
 
-		function addPoint(val) {
+		let avbEvents = []
+
+		function addEvent(val, eventData) {
 			mapboxClient.geocoding
 				.forwardGeocode({
 					query: val,
@@ -59,16 +62,45 @@
 						response.body.features.length
 					) {
 						var feature = response.body.features[0];
-
-						new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+						let marker = new mapboxgl.Marker();
+						marker.setLngLat(feature.center).addTo(map);
+						console.log(marker.getElement());
+						marker.getElement().dataset.eventid = avbEvents.length;
+						avbEvents.push(eventData);
 					}
 				});
 		}
-		addPoint('5 Rue Du Gaillon, 14000 Caen, France'); // Le Baroudeur
-		addPoint('rhumba caen');
-		addPoint('orient express caen');
-		addPoint('farniente caen');
-		addPoint('vertigo caen');
+
+		addEvent('5 Rue Du Gaillon, 14000 Caen, France', {
+			place: "Le Baroudeur",
+			event: "Karaokée",
+			hours: "19h - 23h",
+			price: "Gratuit"
+		}); // Le Baroudeur
+		addEvent('rhumba caen', {
+			place: "Le Rhumba",
+			event: "Anniversaire du bar",
+			hours: "19h - 01h",
+			price: "Gratuit"
+		});
+		addEvent('orient express caen', {
+			place: "Orient Express",
+			event: "Blindtest",
+			hours: "20h - 3h",
+			price: "5€"
+		});
+		addEvent("O'Donnell's Irish Pub, Caen, Calvados 14000, France", {
+			place: "O'Donnell's Irish Pub",
+			event: "Soirée Embuscade",
+			hours: "19h - 02h",
+			price: "Gratuit"
+		});
+		addEvent('vertigo caen', {
+			place: "Le Vertigo",
+			event: "Apéro'party",
+			hours: "18h - 20h",
+			price: "Gratuit"
+		});
 
 		function intersectRect(r1, r2) {
 			return !(r2.left > r1.right ||
@@ -90,16 +122,66 @@
 			return visibles;
 		}
 
-		function updateEventList(markers) {
-			let ul = document.querySelector("")
+
+		let ulAVBEvents = document.querySelector("#avbEvents");
+
+		/*<div class="grid-container">
+		<div class="Event"></div>
+		<div class="Place"></div>
+		<div class="Price"></div>
+		<div class="Hours"></div>
+		</div>*/
+
+		function createPZone(name, text) {
+			let zone = document.createElement("div");
+			let textElement = document.createElement("p");
+			textElement.appendChild(document.createTextNode(text));
+			zone.classList.add(name);
+			zone.appendChild(textElement);
+			return zone;
 		}
 
-		map.on('zoom', function () {
-			updateEventList(getVisibleMarkers())
+		function createEventBox(eventData) {
+			console.log("Creating event: " + eventData)
+			let eventBox = document.createElement('li');
+			let div = document.createElement("div");
+			div.appendChild(createPZone("Place", eventData.place));
+			div.appendChild(createPZone("EventName", eventData.event));
+			div.appendChild(createPZone("Hours", eventData.hours));
+			div.appendChild(createPZone("Price", eventData.price));
+
+			div.classList.add("avbEvent");
+			eventBox.classList.add("eventContainer");
+			eventBox.classList.add("border");
+			eventBox.classList.add("rounded")
+			eventBox.appendChild(div);
+			ulAVBEvents.appendChild(eventBox);
+		}
+
+		function updateEventList(markers) {
+			let eventIds = [];
+			for (const marker of markers) {
+				eventIds.push(marker.dataset.eventid)
+			}
+
+			while (ulAVBEvents.firstChild) {
+				ulAVBEvents.removeChild(ulAVBEvents.firstChild);
+			}
+
+			for (const eventId of eventIds) {
+				let eventData = avbEvents[parseInt(eventId)];
+				createEventBox(eventData);
+			}
+		}
+
+		map.on('zoomend', function () {
+			updateEventList(getVisibleMarkers());
 		});
-		map.on('move', function () {
-			updateEventList(getVisibleMarkers())
+		map.on('moveend', function () {
+			updateEventList(getVisibleMarkers());
 		});
+
+		updateEventList(getVisibleMarkers());
 		``
 		`
 		map.on('load', function () {

@@ -14,6 +14,10 @@ footer {
 	border-top: gray 1px;
 }
 
+#spacer {
+	height: 48px;
+}
+
 .btn-bot {
 	height: 100%;
 	width: 33%;
@@ -30,4 +34,63 @@ footer {
 .btn-bot:focus {
 	color: lightcoral;
 	background-color: #F7F7F7;
+}
+
+#map {
+	width: 100%;
+	height: 25%;
+	border-bottom-width: 2px;
+}
+
+#avbEvents {
+	padding: 2px 2px 2px 2px;
+	list-style: none;
+	background-color: darkgray;
+	width: 100%;
+}
+
+.eventContainer {
+	margin-bottom: 2px;
+	background-color: #FEFEFE;
+}
+
+.avbEvent:nth-child(even) {
+	background: lightgrey;
+}
+
+.avbEvent {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr;
+	grid-template-areas: "Place Place""EventName EventName""Price Hours";
+	height: 96px;
+}
+
+.avbEvent p {
+	margin-bottom: 0px;
+}
+
+.EventName {
+	grid-area: EventName;
+	text-align: center;
+	font-size: large;
+	font-weight: bold;
+}
+
+.Place {
+	grid-area: Place;
+	text-align: center;
+}
+
+.Price {
+	grid-area: Price;
+	float: left;
+	margin-left: 8px;
+}
+
+.Hours {
+	grid-area: Hours;
+	float: right;
+	margin-right: 8px;
+	text-align: right;
 }
