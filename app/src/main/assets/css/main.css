@@ -222,3 +222,18 @@ footer {
 	text-decoration: none;
 	color: black;
 }
+
+.hidden-link:hover {
+	text-decoration: none;
+	color: black;
+}
+
+.hidden-link:visited {
+	text-decoration: none;
+	color: black;
+}
+
+.hidden-link:focus {
+	text-decoration: none;
+	color: black;
+}

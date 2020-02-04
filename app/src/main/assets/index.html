@@ -202,6 +202,7 @@
 
 			if (!isClickInside && !eventInfo.classList.contains("event-info-hidden")) {
 				console.log(eventt, isClickInside, eventInfo.classList);
+				location.hash = "";
 				eventInfo.classList.add("event-info-hidden");
 			}
 		});
@@ -263,9 +264,9 @@
 		}
 
 		function onHashChange(e) {
-			if (location.hash.startsWith("#Event")) {
+			console.log(e);
+			if (e.oldURL.search("#Event") !== -1) {
 				eventInfo.classList.add("event-info-hidden");
-				location.hash = "";
 			}
 		}
 
