@@ -200,7 +200,7 @@
 		document.addEventListener('click', function (eventt) {
 			let isClickInside = cardinfo.contains(eventt.target);
 
-			if (!isClickInside && !eventInfo.classList.contains("eventInfo.classList")) {
+			if (!isClickInside && !eventInfo.classList.contains("event-info-hidden")) {
 				console.log(eventt, isClickInside, eventInfo.classList);
 				eventInfo.classList.add("event-info-hidden");
 			}
@@ -218,6 +218,10 @@
 		function createEventBox(eventData, id) {
 			console.log("Creating event: " + eventData)
 			let eventBox = document.createElement('li');
+			eventBox.id = "EventID-" + id;
+			let anchorLink = document.createElement('a');
+			anchorLink.href = "#EventID-" + id;
+			anchorLink.classList.add("hidden-link");
 			let div = document.createElement("div");
 			div.appendChild(createPZone("Place", eventData.place));
 			div.appendChild(createPZone("EventName", eventData.event));
@@ -228,7 +232,8 @@
 			eventBox.classList.add("eventContainer");
 			eventBox.classList.add("border");
 			eventBox.classList.add("rounded")
-			eventBox.appendChild(div);
+			anchorLink.appendChild(div);
+			eventBox.appendChild(anchorLink);
 			eventBox.dataset.eventid = id;
 
 			eventBox.addEventListener('click', popupEventInfo)
@@ -256,6 +261,15 @@
 		function updateEvents() {
 			updateEventList(getVisibleMarkers());
 		}
+
+		function onHashChange(e) {
+			if (location.hash.startsWith("#Event")) {
+				eventInfo.classList.add("event-info-hidden");
+				location.hash = "";
+			}
+		}
+
+		window.addEventListener("hashchange", onHashChange, false);
 
 		map.on('zoomend', function () {
 			updateEvents();

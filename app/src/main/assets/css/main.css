@@ -218,10 +218,7 @@ footer {
 	color: salmon;
 }
 
-# {
-	width: 100%;
-}
-
-#participe-interessed {
-	width: 100%;
+.hidden-link {
+	text-decoration: none;
+	color: black;
 }
