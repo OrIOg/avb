@@ -97,12 +97,12 @@ footer {
 	transform: translateY(-100%);
 }
 
-#searchBar:focus-within>#filterbox {
+#filter:focus~#filterbox {
 	transition: all 1s;
 	transform: translateY(0%);
 }
 
-#searchBar:focus-within>#unfilter {
+#filter:focus~#unfilter {
 	display: block;
 }
 
@@ -184,6 +184,7 @@ footer {
 	margin-bottom: 0px;
 	border-top-left-radius: 16px;
 	border-top-right-radius: 16px;
+	max-height: 75%;
 	position: fixed;
 	z-index: 200;
 	bottom: 0px;
@@ -197,6 +198,13 @@ footer {
 }
 
 #carouselExempleIndicators {
+	border-top-left-radius: 16px;
+	border-top-right-radius: 16px;
+}
+
+#scrollEvent {
+	overflow: auto;
+	overflow-y: overlay;
 	border-top-left-radius: 16px;
 	border-top-right-radius: 16px;
 }
