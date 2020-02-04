@@ -8,6 +8,7 @@
 	<link type="text/css" rel="stylesheet" href="./css/main.css" />
 	<link type="text/css" rel="stylesheet" href="./lib/bootstrap-4.4.1-dist/css/bootstrap.min.css" />
 	<script src='https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js'></script>
+	<script src='./lib/hammer.min.js'></script>
 	<link href='https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css' rel='stylesheet' />
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 </head>
@@ -193,7 +194,6 @@
 				eventInfo.classList.add("event-info-hidden");
 				preventHashChange = true;
 				location.hash = "";
-				e.preventDefault();
 				return;
 			}
 			let event = avbEvents[parseInt(e.currentTarget.dataset.eventid)];
@@ -206,6 +206,8 @@
 			hideTimeout = setTimeout(() => {
 				eventInfo.classList.remove("event-info-hidden");
 			}, 10);
+
+			e.preventDefault();
 		}
 		document.addEventListener('click', function (eventt) {
 			let isClickInside = cardinfo.contains(eventt.target);
@@ -281,12 +283,21 @@
 				e.preventDefault();
 			}
 
-			if (hideCard || e.oldURL !== e.newURL) {
+			if (hideCard || (location.hash !== "" && e.oldURL !== e.newURL)) {
 				console.log("ploop");
 				eventInfo.classList.add("event-info-hidden");
 				hideCard = false;
 			}
 		}
+
+		let hammertime = Hammer(eventInfo);
+		hammertime.get('swipe').set({
+			direction: Hammer.DIRECTION_DOWN
+		});
+
+		hammertime.on('swipe', function (ev) {
+			eventInfo.classList.add("event-info-hidden");
+		});
 
 		window.addEventListener("hashchange", onHashChange, false);
 
