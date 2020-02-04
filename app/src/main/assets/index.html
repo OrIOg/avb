@@ -184,8 +184,18 @@
 		<div class="Price"></div>
 		<div class="Hours"></div>
 		</div>*/
+		let hideTimeout;
+		let hideCard = false;
+		let preventHashChange = false;
 
 		function popupEventInfo(e) {
+			if (hideCard || !eventInfo.classList.contains("event-info-hidden")) {
+				eventInfo.classList.add("event-info-hidden");
+				preventHashChange = true;
+				location.hash = "";
+				e.preventDefault();
+				return;
+			}
 			let event = avbEvents[parseInt(e.currentTarget.dataset.eventid)];
 			cardinfo.querySelector(".card-title").innerText = event.place;
 			cardinfo.querySelector(".card-text").innerText = event.event;
@@ -193,7 +203,7 @@
 			cardinfo.querySelector(".card-hours").innerText = event.hours;
 			eventInfo.focus()
 
-			setTimeout(() => {
+			hideTimeout = setTimeout(() => {
 				eventInfo.classList.remove("event-info-hidden");
 			}, 10);
 		}
@@ -202,8 +212,10 @@
 
 			if (!isClickInside && !eventInfo.classList.contains("event-info-hidden")) {
 				console.log(eventt, isClickInside, eventInfo.classList);
-				location.hash = "";
+				hideCard = true;
 				eventInfo.classList.add("event-info-hidden");
+				event.stopPropagation();
+				event.preventDefault();
 			}
 		});
 
@@ -264,9 +276,15 @@
 		}
 
 		function onHashChange(e) {
-			console.log(e);
-			if (e.oldURL.search("#Event") !== -1) {
+			if (preventHashChange) {
+				preventHashChange = false;
+				e.preventDefault();
+			}
+
+			if (hideCard || e.oldURL !== e.newURL) {
+				console.log("ploop");
 				eventInfo.classList.add("event-info-hidden");
+				hideCard = false;
 			}
 		}
 
