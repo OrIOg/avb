@@ -192,6 +192,16 @@
 					});
 			}
 			{
+				addEvent(
+					"15 Esplanade Brillaud De Laujardière, 14000 Caen, France",
+					{
+						place: "Crédit Agricole",
+						event: "Salon du crowdfunding",
+						hours: "14h - 17h",
+						price: "Gratuit",
+						img: ["./img/salon_ca.jpg"]
+					}
+				);
 				addEvent("5 Rue Du Gaillon, 14000 Caen, France", {
 					place: "Le Baroudeur",
 					event: "Karaoké",
@@ -225,16 +235,38 @@
 					hours: "18h - 20h",
 					price: "Gratuit"
 				});
-				addEvent(
-					"15 Esplanade Brillaud De Laujardière, 14000 Caen, France",
-					{
-						place: "Crédit Agricole",
-						event: "Salon du crowdfunding",
-						hours: "14h - 17h",
-						price: "Gratuit",
-						img: ["./img/salon_ca.jpg"]
-					}
-				);
+			}
+
+			function addCarouselImages(imgs) {
+				let carousel = document.querySelector(".carousel-inner");
+
+				while (carousel.firstChild) {
+					carousel.removeChild(carousel.firstChild);
+				}
+
+				imgs.forEach(img => {
+					let item = document.createElement("div");
+					item.classList.add("carousel-item");
+					let imgEl = document.createElement("img");
+					imgEl.classList.add("d-block");
+					imgEl.classList.add("w-100");
+					imgEl.src = img;
+					item.appendChild(imgEl);
+					carousel.appendChild(item);
+				});
+
+				carousel.firstElementChild.classList.add("active");
+
+				//document.querySelector(".carousel-item img").src = event.img[0];
+				/*
+				div class="carousel-inner">
+							<div class="carousel-item active">
+								<img
+									class="d-block w-100"
+									src="https://upload.wikimedia.org/wikipedia/commons/4/43/Bar-P1030319.jpg"
+									alt="First slide"
+								/>
+							</div>*/
 			}
 
 			function intersectRect(r1, r2) {
@@ -286,9 +318,13 @@
 				let event =
 					avbEvents[parseInt(e.currentTarget.dataset.eventid)];
 				if (event.hasOwnProperty("img")) {
-					document.querySelector(".carousel-item img").src =
-						event.img[0];
+					addCarouselImages(event.img);
+				} else {
+					addCarouselImages([
+						"https://upload.wikimedia.org/wikipedia/commons/4/43/Bar-P1030319.jpg"
+					]);
 				}
+
 				cardinfo.querySelector(".card-title").innerText = event.place;
 				cardinfo.querySelector(".card-text").innerText = event.event;
 				cardinfo.querySelector(".card-price").innerText = event.price;
@@ -310,7 +346,7 @@
 				) {
 					console.log(eventt, isClickInside, eventInfo.classList);
 					hideCard = true;
-					eventInfo.classList.add("event-info-hidden");
+					//eventInfo.classList.add("event-info-hidden");
 					event.stopPropagation();
 					event.preventDefault();
 				}
