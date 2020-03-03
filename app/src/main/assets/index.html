@@ -291,6 +291,7 @@
 				return visibles;
 			}
 
+			let mapElement = document.querySelector("#map");
 			let ulAVBEvents = document.querySelector("#avbEvents");
 			let eventInfo = document.querySelector("#eventInfo");
 			let cardinfo = document.querySelector("#cardinfo");
@@ -338,8 +339,15 @@
 				e.preventDefault();
 			}
 			document.addEventListener("click", function(eventt) {
-				let isClickInside = cardinfo.contains(eventt.target);
+				let isClickInside = mapElement.contains(eventt.target);
+				if (isClickInside) {
+					eventInfo.classList.add("event-info-hidden");
+				}
+			});
 
+			avbEvents.addEventListener("click", function(eventt) {
+				let isClickInside = cardinfo.contains(eventt.target);
+				print(eventt, isClickInside);
 				if (
 					!isClickInside &&
 					!eventInfo.classList.contains("event-info-hidden")
@@ -440,7 +448,10 @@
 			map.on("moveend", function() {
 				updateEvents();
 			});
-			```
+			mapElement.addEventListener("click", function(e) {
+				eventInfo.classList.add("event-info-hidden");
+				console("CLOCK", e);
+			})```
 			map.on('load', function () {
 				map.loadImage(
 					'https://i.imgur.com/WgWXj11.png',
