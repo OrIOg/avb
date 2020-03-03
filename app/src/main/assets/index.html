@@ -2,7 +2,7 @@
 <html lang="fr">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>À vos bars !</title>
 		<link
 			type="text/css"
@@ -225,6 +225,16 @@
 					hours: "18h - 20h",
 					price: "Gratuit"
 				});
+				addEvent(
+					"15 Esplanade Brillaud De Laujardière, 14000 Caen, France",
+					{
+						place: "Crédit Agricole",
+						event: "Salon du crowdfunding",
+						hours: "14h - 17h",
+						price: "Gratuit",
+						img: ["./img/salon_ca.jpg"]
+					}
+				);
 			}
 
 			function intersectRect(r1, r2) {
@@ -254,11 +264,11 @@
 			let cardinfo = document.querySelector("#cardinfo");
 
 			/*<div class="grid-container">
-		<div class="Event"></div>
-		<div class="Place"></div>
-		<div class="Price"></div>
-		<div class="Hours"></div>
-		</div>*/
+			<div class="Event"></div>
+			<div class="Place"></div>
+			<div class="Price"></div>
+			<div class="Hours"></div>
+			</div>*/
 			let hideTimeout;
 			let hideCard = false;
 			let preventHashChange = false;
@@ -275,6 +285,10 @@
 				}
 				let event =
 					avbEvents[parseInt(e.currentTarget.dataset.eventid)];
+				if (event.hasOwnProperty("img")) {
+					document.querySelector(".carousel-item img").src =
+						event.img[0];
+				}
 				cardinfo.querySelector(".card-title").innerText = event.place;
 				cardinfo.querySelector(".card-text").innerText = event.event;
 				cardinfo.querySelector(".card-price").innerText = event.price;
@@ -391,38 +405,38 @@
 				updateEvents();
 			});
 			```
-		map.on('load', function () {
-			map.loadImage(
-				'https://i.imgur.com/WgWXj11.png',
-				function (error, image) {
-					if (error) throw error;
-					map.addImage('bar', image);
-					map.addSource('point', {
-						'type': 'geojson',
-						'data': {
-							'type': 'FeatureCollection',
-							'features': [{
-								'type': 'Feature',
-								'geometry': {
-									'type': 'Point',
-									'coordinates': [-0.366501, 49.187963]
-								}
-							}]
-						}
-					});
-					map.addLayer({
-						'id': 'points',
-						'type': 'symbol',
-						'source': 'point',
-						'layout': {
-							'icon-image': 'bar',
-							'icon-size': 0.05
-						}
-					});
-				}
-			);
-		});
-		```;
+			map.on('load', function () {
+				map.loadImage(
+					'https://i.imgur.com/WgWXj11.png',
+					function (error, image) {
+						if (error) throw error;
+						map.addImage('bar', image);
+						map.addSource('point', {
+							'type': 'geojson',
+							'data': {
+								'type': 'FeatureCollection',
+								'features': [{
+									'type': 'Feature',
+									'geometry': {
+										'type': 'Point',
+										'coordinates': [-0.366501, 49.187963]
+									}
+								}]
+							}
+						});
+						map.addLayer({
+							'id': 'points',
+							'type': 'symbol',
+							'source': 'point',
+							'layout': {
+								'icon-image': 'bar',
+								'icon-size': 0.05
+							}
+						});
+					}
+				);
+			});
+			```;
 		</script>
 	</body>
 </html>
